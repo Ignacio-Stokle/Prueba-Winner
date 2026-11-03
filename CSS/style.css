@@ -1,0 +1,1306 @@
+/*
+    ============================================================
+    WINNER: HOJA DE ESTILOS
+    ============================================================
+
+    Idea de diseño: el sitio se parece a lo que cualquier hincha
+    ya sabe leer, una tabla de posiciones.
+
+      - Verde césped: cabeceras y tabla.
+      - Amarilla de árbitro: el líder y los números que importan.
+      - Una sola familia tipográfica (Archivo) usada en dos anchos:
+        condensado y pesado para números y títulos, normal para texto.
+      - Los datos van en filas rectas, como una planilla.
+        Las esquinas redondeadas se reservan para escudos, placas
+        y botones.
+
+    Índice:
+      1. Variables y tema oscuro
+      2. Base
+      3. Cabecera y menú
+      4. Estructura de las páginas
+      5. Piezas: escudos, placas, medallas, pestañas, botones
+      6. Tabla de posiciones
+      7. Inicio
+      8. Competiciones
+      9. Equipos y perfil de club
+     10. Revisión de datos, carga y errores
+     11. Avisos y pie
+     12. Pantallas chicas
+     13. Movimiento reducido
+*/
+
+
+/* ============================================================
+   1. VARIABLES Y TEMA OSCURO
+   ============================================================ */
+
+:root {
+    --f: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+
+    --papel: #F2F5F0;
+    --superficie: #FFFFFF;
+    --superficie-2: #E6ECE5;
+    --cesped: #0C3B2C;
+    --cesped-2: #16604A;
+    --amarilla: #FFD60A;
+    --sobre-amarilla: #11231B;
+    --roja: #B71F33;
+    --sobre-roja: #FFFFFF;
+    --ambar: #9A6500;
+
+    --tinta: #11231B;
+    --tinta-2: #47594F;
+    --linea: #CBD5CD;
+    --enlace: #14573F;
+    --realce: var(--cesped);
+    --barra: var(--cesped-2);
+    --boton: var(--cesped);
+    --foco: var(--cesped-2);
+
+    --ancho: 1180px;
+    --alto-cabecera: 64px;
+
+    color-scheme: light;
+}
+
+[data-tema="oscuro"] {
+    --papel: #08120E;
+    --superficie: #0F1D17;
+    --superficie-2: #17291F;
+    --cesped: #0A2A20;
+    --cesped-2: #2A8F6C;
+    --roja: #FF7A8A;
+    --sobre-roja: #2A0A10;
+    --ambar: #F2B544;
+
+    --tinta: #E9F1EC;
+    --tinta-2: #9DB1A6;
+    --linea: #25392F;
+    --enlace: #7FD6AC;
+    --realce: var(--amarilla);
+    --barra: #2FA37A;
+    --boton: #1F7A5C;
+    --foco: var(--amarilla);
+
+    color-scheme: dark;
+}
+
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: var(--f);
+    font-size: 1rem;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    font-weight: 800;
+    font-stretch: 72%;
+    line-height: 1.02;
+    text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.6rem, 6.5vw, 4.75rem); letter-spacing: -0.005em; }
+h2 { font-size: clamp(1.7rem, 3vw, 2.2rem); }
+
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+img { max-width: 100%; }
+
+a { color: var(--enlace); }
+
+:focus-visible {
+    outline: 3px solid var(--foco);
+    outline-offset: 2px;
+}
+
+main:focus { outline: none; }
+
+.solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.saltar {
+    position: absolute;
+    left: -999px;
+    top: 0.5rem;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    background: var(--amarilla);
+    color: var(--sobre-amarilla);
+    font-weight: 700;
+    border-radius: 6px;
+}
+.saltar:focus { left: 0.5rem; }
+
+
+/* ============================================================
+   3. CABECERA Y MENÚ
+   ============================================================ */
+
+.cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--cesped);
+    color: #fff;
+}
+
+[data-tema="oscuro"] .cabecera { border-bottom: 1px solid var(--linea); }
+
+.cabecera :focus-visible { outline-color: var(--amarilla); }
+
+.cabecera__in {
+    max-width: var(--ancho);
+    height: var(--alto-cabecera);
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.marca img { display: block; }
+
+.marca__nombre {
+    font-size: 1.8rem;
+    font-weight: 900;
+    font-stretch: 68%;
+    letter-spacing: 0.05em;
+    line-height: 1;
+}
+
+.menu {
+    display: flex;
+    align-self: stretch;
+}
+
+.menu__enlace {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    color: rgb(255 255 255 / 0.78);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.menu__enlace svg { display: none; }
+
+.menu__enlace:hover { color: #fff; }
+
+.menu__enlace[aria-current="page"] { color: #fff; }
+
+.menu__enlace[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0;
+    height: 4px;
+    background: var(--amarilla);
+}
+
+.acciones {
+    margin-left: auto;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.boton-icono {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+
+.boton-icono:hover { background: rgb(255 255 255 / 0.12); }
+.boton-icono:disabled { cursor: progress; }
+
+.girando svg { animation: girar 0.9s linear infinite; }
+
+@keyframes girar { to { transform: rotate(360deg); } }
+
+
+/* ============================================================
+   4. ESTRUCTURA DE LAS PÁGINAS
+   ============================================================ */
+
+main {
+    flex: 1 0 auto;
+    overflow-x: clip;
+}
+
+.pagina {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: 2rem 1.25rem 3rem;
+}
+
+.pagina--angosta { max-width: 780px; }
+
+.bajada {
+    max-width: 60ch;
+    margin-top: 0.85rem;
+    color: var(--tinta-2);
+    font-size: 1.15rem;
+}
+
+.nota {
+    margin-top: 1rem;
+    color: var(--tinta-2);
+    font-size: 0.9rem;
+}
+
+.nota--deslizar { display: none; }
+
+.vacio {
+    padding: 2rem 1.25rem;
+    border: 1px dashed var(--linea);
+    background: var(--superficie);
+}
+.vacio p { margin-top: 0.5rem; color: var(--tinta-2); }
+
+.bloque { margin-top: 3.25rem; }
+
+.bloque__cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.bloque__enlace {
+    display: inline-block;
+    margin-top: 0.9rem;
+    font-weight: 700;
+}
+.bloque__cabecera .bloque__enlace { margin-top: 0; }
+
+.encabezado { margin-bottom: 1.75rem; }
+
+.volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin-bottom: 1.25rem;
+    margin-left: -0.3rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+.volver:hover { text-decoration: underline; }
+
+.titular {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+
+/* ============================================================
+   5. PIEZAS
+   ============================================================ */
+
+/* ---------- Botones ---------- */
+
+.boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.3rem;
+    border: 0;
+    border-radius: 8px;
+    background: var(--boton);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+.boton:hover { background: var(--cesped-2); }
+
+/* ---------- Escudos y placas ---------- */
+
+.escudo {
+    --t: 40px;
+    width: var(--t);
+    height: var(--t);
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+}
+
+.escudo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.escudo--iniciales {
+    border-radius: 50%;
+    background: hsl(var(--tono) 42% 30%);
+    color: #fff;
+    font-size: calc(var(--t) * 0.4);
+    font-weight: 800;
+    font-stretch: 75%;
+    letter-spacing: 0.02em;
+}
+
+/* Logos de competiciones: fondo transparente, sin placa.
+   Los que no se leen sobre los dos temas tienen una versión para cada uno
+   (ver "logoOscuro" en JS/config.js). */
+.placa {
+    --t: 64px;
+    width: var(--t);
+    height: var(--t);
+    flex: none;
+    display: grid;
+    place-items: center;
+    color: var(--tinta);
+}
+.placa img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.placa .logo--oscuro { display: none; }
+[data-tema="oscuro"] .placa .logo--claro { display: none; }
+[data-tema="oscuro"] .placa .logo--oscuro { display: block; }
+
+/* ---------- Medallas (años) ---------- */
+
+.medallas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.medalla {
+    padding: 0.15rem 0.7rem;
+    border: 1px solid var(--linea);
+    border-radius: 999px;
+    background: var(--superficie-2);
+    font-size: 1rem;
+    font-weight: 700;
+    font-stretch: 80%;
+    line-height: 1.3;
+}
+
+.medallas--chicas { gap: 0.3rem; }
+.medallas--chicas .medalla { padding: 0.05rem 0.55rem; font-size: 0.88rem; }
+
+/* ---------- Pestañas ---------- */
+
+.pestanas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 1.5rem 0;
+    border-bottom: 2px solid var(--linea);
+}
+
+.bloque__cabecera .pestanas { margin: 0; border-bottom: 0; }
+
+.pestana {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: -2px;
+    padding: 0.65rem 1.05rem;
+    border: 0;
+    border-bottom: 4px solid transparent;
+    background: none;
+    color: var(--tinta-2);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+.pestana:hover { color: var(--tinta); }
+.pestana[aria-current="page"],
+.pestana[aria-selected="true"] {
+    color: var(--tinta);
+    border-bottom-color: var(--realce);
+}
+
+.pestana__cuenta {
+    padding: 0 0.5rem;
+    border-radius: 999px;
+    background: var(--superficie-2);
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+/* ---------- Búsqueda y filtros ---------- */
+
+.filtro {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    max-width: 22rem;
+    height: 2.75rem;
+    padding: 0 0.85rem;
+    border: 1px solid var(--tinta-2);
+    border-radius: 8px;
+    background: var(--superficie);
+    color: var(--tinta-2);
+}
+
+.filtro:focus-within {
+    border-color: var(--foco);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--foco) 35%, transparent);
+}
+
+.filtro input,
+.buscador__campo input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--tinta);
+    font: inherit;
+}
+
+.herramientas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+.herramientas .filtro { flex: 1 1 16rem; }
+
+.selector {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+}
+
+.selector select {
+    height: 2.75rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--tinta-2);
+    border-radius: 8px;
+    background: var(--superficie);
+    color: var(--tinta);
+    font: inherit;
+}
+
+
+/* ============================================================
+   6. TABLA DE POSICIONES
+   ============================================================ */
+
+.tabla-caja {
+    overflow-x: auto;
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    background: var(--superficie);
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.tabla thead th {
+    padding: 0.7rem 0.75rem;
+    background: var(--cesped);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+.tabla thead :focus-visible { outline-color: var(--amarilla); }
+
+.tabla tbody th,
+.tabla tbody td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--linea);
+    background: var(--fila, var(--superficie));
+    font-weight: 400;
+    text-align: center;
+}
+
+.tabla tbody tr:last-child > * { border-bottom: 0; }
+.tabla tbody tr:hover { --fila: var(--superficie-2); }
+
+.tabla .c-pos {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    width: 3.25rem;
+    min-width: 3.25rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+    font-stretch: 72%;
+}
+.tabla thead .c-pos { font-size: 0.9rem; font-stretch: 100%; font-weight: 700; }
+
+.tabla .c-club {
+    position: sticky;
+    left: 3.25rem;
+    z-index: 1;
+    min-width: 11.5rem;
+    text-align: left;
+    box-shadow: 1px 0 0 var(--linea);
+}
+
+.fila--lider .c-pos { background: var(--amarilla); color: var(--sobre-amarilla); }
+.fila--podio .c-pos { color: var(--enlace); }
+
+.club-enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: inherit;
+    font-weight: 600;
+    text-decoration: none;
+}
+.club-enlace:hover span { text-decoration: underline; text-underline-offset: 3px; }
+
+.tabla .c-comp { min-width: 3.5rem; font-weight: 700; }
+.tabla tbody .c-comp--cero { color: var(--tinta-2); font-weight: 400; opacity: 0.7; }
+
+.tabla .c-total { min-width: 7.5rem; text-align: right; }
+
+.c-total strong {
+    display: block;
+    font-size: 1.55rem;
+    font-weight: 900;
+    font-stretch: 68%;
+    line-height: 1.05;
+}
+
+.barra {
+    display: block;
+    height: 5px;
+    margin-top: 0.3rem;
+    background: var(--superficie-2);
+}
+.barra i {
+    display: block;
+    height: 100%;
+    background: var(--barra);
+    transform: scaleX(var(--p, 1));
+    transform-origin: left;
+}
+
+/* El único movimiento de la portada: las barras crecen una vez. */
+.tabla--anima .barra i {
+    animation: crecer 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 50ms);
+}
+@keyframes crecer { from { transform: scaleX(0); } }
+
+/* Encabezados ordenables */
+.orden {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+.orden:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.orden__flecha {
+    position: relative;
+    display: inline-block;
+    width: 10px;
+    height: 12px;
+}
+.orden__flecha::after {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 50%;
+    border: 4px solid transparent;
+}
+[aria-sort="descending"] .orden__flecha::after { border-top-color: var(--amarilla); margin-top: -2px; }
+[aria-sort="ascending"] .orden__flecha::after { border-bottom-color: var(--amarilla); margin-top: -6px; }
+
+.tabla__vacio { padding: 1.5rem !important; color: var(--tinta-2); }
+
+
+/* ============================================================
+   7. INICIO
+   ============================================================ */
+
+.portada {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+    padding: 1.5rem 0 0.5rem;
+}
+
+/* Círculo y línea de medio campo, muy suaves, detrás del marcador. */
+.portada::before,
+.portada::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+}
+.portada::before {
+    top: 50%;
+    right: 3%;
+    width: min(480px, 46vw);
+    aspect-ratio: 1;
+    transform: translateY(-50%);
+    border: 2px solid var(--linea);
+    border-radius: 50%;
+}
+.portada::after {
+    top: -2rem;
+    bottom: -1.5rem;
+    right: calc(3% + min(480px, 46vw) / 2);
+    width: 2px;
+    background: var(--linea);
+}
+.portada > * { position: relative; z-index: 1; }
+.portada__texto { z-index: 3; }   /* la lista de sugerencias pasa por encima del marcador */
+
+.portada h1 { max-width: 11ch; }
+
+.marcador {
+    margin: 0;
+    padding: 0.5rem 1.5rem;
+    background: var(--cesped);
+    color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 0 0 6px var(--papel);
+}
+
+[data-tema="oscuro"] .marcador { border: 1px solid var(--linea); }
+
+.marcador__fila {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.16);
+}
+.marcador__fila:last-child { border-bottom: 0; }
+
+.marcador dt { color: rgb(255 255 255 / 0.82); font-weight: 600; }
+
+.marcador dd {
+    margin: 0;
+    color: var(--amarilla);
+    font-size: clamp(2.6rem, 5vw, 3.6rem);
+    font-weight: 900;
+    font-stretch: 62%;
+    line-height: 1;
+}
+
+/* Buscador de clubes */
+.buscador {
+    position: relative;
+    max-width: 30rem;
+    margin-top: 1.75rem;
+    scroll-margin-top: calc(var(--alto-cabecera) + 1rem);
+}
+
+.buscador__etiqueta {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+}
+
+.buscador__campo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 3.4rem;
+    padding: 0 1rem;
+    border: 2px solid var(--tinta);
+    border-radius: 8px;
+    background: var(--superficie);
+}
+.buscador__campo:focus-within {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--foco) 40%, transparent);
+}
+.buscador__campo input { font-size: 1.1rem; }
+.buscador__campo svg { flex: none; color: var(--tinta-2); }
+
+.sugerencias {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+    margin-top: 4px;
+    overflow: hidden;
+    border: 2px solid var(--tinta);
+    border-radius: 8px;
+    background: var(--superficie);
+    box-shadow: 0 12px 28px rgb(0 0 0 / 0.18);
+}
+
+.sugerencia {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.9rem;
+    cursor: pointer;
+}
+.sugerencia[aria-selected="true"],
+.sugerencia:hover { background: var(--amarilla); color: var(--sobre-amarilla); }
+.sugerencia--vacia { color: var(--tinta-2); cursor: default; }
+.sugerencia--vacia:hover { background: none; color: var(--tinta-2); }
+.sugerencia__nombre { font-weight: 600; }
+.sugerencia__cuenta { margin-left: auto; font-size: 0.85rem; opacity: 0.8; }
+
+/* Competiciones en el inicio */
+.fila-placas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+    gap: 0.75rem;
+}
+
+.placa-enlace {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    height: 100%;
+    padding: 1.1rem 0.75rem;
+    border: 1px solid var(--linea);
+    border-radius: 10px;
+    background: var(--superficie);
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+}
+.placa-enlace:hover { border-color: var(--cesped-2); }
+.placa-enlace:hover .placa-enlace__nombre { text-decoration: underline; text-underline-offset: 3px; }
+.placa-enlace__nombre { font-weight: 700; line-height: 1.2; }
+.placa-enlace__dato { color: var(--tinta-2); font-size: 0.85rem; }
+
+
+/* ============================================================
+   8. COMPETICIONES
+   ============================================================ */
+
+.comp-grilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.comp-tarjeta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--linea);
+    border-radius: 10px;
+    background: var(--superficie);
+    color: inherit;
+    text-decoration: none;
+}
+.comp-tarjeta:hover { border-color: var(--cesped-2); }
+.comp-tarjeta:hover h2 { text-decoration: underline; text-underline-offset: 4px; }
+.comp-tarjeta__texto { display: grid; gap: 0.25rem; min-width: 0; }
+.comp-tarjeta h2 { font-size: 1.7rem; }
+.comp-tarjeta p { color: var(--tinta-2); font-size: 0.95rem; }
+.comp-tarjeta .comp-tarjeta__ultimo strong { color: var(--tinta); }
+
+/* Datos de una competición */
+.datos {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1.5rem 0 0;
+    border: 1px solid var(--linea);
+    background: var(--superficie);
+}
+
+.dato {
+    flex: 1 1 12rem;
+    min-width: 0;
+    padding: 0.9rem 1.15rem;
+    border-right: 1px solid var(--linea);
+}
+.dato:last-child { border-right: 0; }
+
+.dato dt { color: var(--tinta-2); font-size: 0.88rem; font-weight: 600; }
+
+.dato dd {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.1rem 0 0;
+    font-size: 2.4rem;
+    font-weight: 900;
+    font-stretch: 66%;
+    line-height: 1.1;
+}
+
+.dato--lider dd { font-size: 1.5rem; font-stretch: 80%; font-weight: 800; }
+.dato--lider dd > span:first-of-type { min-width: 0; line-height: 1.1; }
+
+.dato__cuenta {
+    margin-left: auto;
+    padding: 0 0.65rem;
+    border-radius: 999px;
+    background: var(--amarilla);
+    color: var(--sobre-amarilla);
+    font-size: 1.1rem;
+}
+
+/* Ranking de campeones */
+.posiciones {
+    border: 1px solid var(--linea);
+    border-radius: 4px;
+    background: var(--superficie);
+}
+
+.posicion {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr) 7.5rem;
+    align-items: stretch;
+    border-bottom: 1px solid var(--linea);
+}
+.posicion:last-child { border-bottom: 0; }
+
+.posicion__puesto {
+    display: grid;
+    place-items: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    font-stretch: 72%;
+}
+.posicion--lider .posicion__puesto { background: var(--amarilla); color: var(--sobre-amarilla); }
+.posicion--podio .posicion__puesto { color: var(--enlace); }
+
+.posicion__club {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 0.8rem 0.75rem;
+}
+
+.posicion__total {
+    align-self: center;
+    padding: 0.7rem 1rem 0.7rem 0;
+    text-align: right;
+}
+.posicion__total strong {
+    display: block;
+    font-size: 1.9rem;
+    font-weight: 900;
+    font-stretch: 68%;
+    line-height: 1.05;
+}
+
+.posiciones__vacio { padding: 1.5rem; color: var(--tinta-2); }
+
+/* Año por año */
+.cronologia { border-top: 2px solid var(--tinta); }
+
+.cronologia__fila {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--linea);
+}
+
+.cronologia__anio {
+    font-size: 1.9rem;
+    font-weight: 900;
+    font-stretch: 66%;
+    line-height: 1;
+}
+
+.cronologia__campeones { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+
+
+/* ============================================================
+   9. EQUIPOS Y PERFIL DE CLUB
+   ============================================================ */
+
+.escudos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8.75rem, 1fr));
+    gap: 0.75rem;
+}
+
+.club-ficha {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    height: 100%;
+    padding: 1.2rem 0.6rem 0.95rem;
+    border: 1px solid var(--linea);
+    border-radius: 10px;
+    background: var(--superficie);
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+}
+.club-ficha:hover { border-color: var(--cesped-2); }
+.club-ficha:hover .club-ficha__nombre { text-decoration: underline; text-underline-offset: 3px; }
+
+.club-ficha__nombre {
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+.insignia {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    padding: 0 0.45rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--amarilla);
+    color: var(--sobre-amarilla);
+    font-size: 1rem;
+    font-weight: 900;
+    font-stretch: 75%;
+}
+
+.escudos__vacio {
+    grid-column: 1 / -1;
+    padding: 2rem 1rem;
+    color: var(--tinta-2);
+}
+
+/* Perfil */
+.ficha__cuerpo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem 2rem;
+}
+
+.ficha__texto { flex: 1 1 18rem; min-width: 0; }
+.ficha__region { margin-top: 0.6rem; font-size: 1.1rem; font-weight: 600; color: var(--tinta-2); }
+.ficha__puesto { margin-top: 0.25rem; color: var(--tinta-2); }
+
+.ficha__total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 9rem;
+    padding: 0.8rem 1.4rem 0.9rem;
+    border-radius: 8px;
+    background: var(--amarilla);
+    color: var(--sobre-amarilla);
+}
+.ficha__total strong {
+    font-size: 5rem;
+    font-weight: 900;
+    font-stretch: 62%;
+    line-height: 0.95;
+}
+.ficha__total span { font-size: 1.05rem; font-weight: 800; }
+
+.vitrina { display: grid; gap: 1.25rem; }
+
+/* Cada competición es un estante de la vitrina. */
+.estante {
+    padding: 1rem 1.25rem 1.3rem;
+    border: 1px solid var(--linea);
+    border-bottom: 6px solid var(--cesped-2);
+    background: var(--superficie);
+}
+
+.estante__cabecera {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+}
+.estante__cabecera h2 { font-size: 1.8rem; }
+.estante__cabecera h2 a { color: inherit; text-decoration: none; }
+.estante__cabecera h2 a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.estante__cuenta { margin-left: auto; color: var(--tinta-2); font-weight: 700; white-space: nowrap; }
+
+.estante .medalla { padding: 0.2rem 0.85rem; font-size: 1.2rem; }
+
+
+/* ============================================================
+   10. REVISIÓN DE DATOS, CARGA Y ERRORES
+   ============================================================ */
+
+.revision {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--linea);
+    background: var(--superficie);
+}
+
+.revision__cabecera { display: flex; align-items: center; gap: 0.7rem; }
+.revision__cabecera h2 { font-size: 1.35rem; font-stretch: 85%; }
+
+.revision__cuenta {
+    margin-left: auto;
+    padding: 0.05rem 0.7rem;
+    border-radius: 999px;
+    background: var(--superficie-2);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.revision__ayuda { margin-top: 0.5rem; color: var(--tinta-2); font-size: 0.95rem; }
+
+.revision__lista { margin-top: 0.6rem; padding-left: 1.1rem; list-style: disc; }
+.revision__lista li { margin: 0.25rem 0; font-size: 0.95rem; }
+
+.revision--ok .revision__cabecera svg { color: var(--enlace); }
+.revision--aviso .revision__cabecera svg { color: var(--ambar); }
+.revision--error { border-color: var(--roja); }
+.revision--error .revision__cabecera svg { color: var(--roja); }
+.revision--error .revision__cuenta { background: var(--roja); color: var(--sobre-roja); }
+.revision--info .revision__cabecera svg,
+.revision--pendiente .revision__cabecera svg { color: var(--tinta-2); }
+
+.hojas { display: grid; gap: 0.6rem; margin: 0.75rem 0 0; }
+.hojas dt { font-weight: 700; }
+.hojas dd { margin: 0; color: var(--tinta-2); font-size: 0.92rem; overflow-wrap: anywhere; }
+
+.esqueleto span {
+    display: block;
+    height: 3.2rem;
+    margin-top: 0.6rem;
+    background: linear-gradient(90deg, var(--superficie-2) 0%, var(--superficie) 50%, var(--superficie-2) 100%);
+    background-size: 200% 100%;
+    animation: brillo 1.4s linear infinite;
+}
+.esqueleto--titulo span { width: min(26rem, 80%); height: 4rem; }
+@keyframes brillo { to { background-position: -200% 0; } }
+
+.falla { display: grid; justify-items: start; gap: 0.9rem; padding-top: 1.5rem; }
+.falla > svg { color: var(--roja); }
+.pasos { padding-left: 1.2rem; list-style: disc; }
+.pasos li { margin: 0.3rem 0; }
+
+
+/* ============================================================
+   11. AVISOS Y PIE
+   ============================================================ */
+
+.aviso-fijo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1.25rem;
+    background: var(--amarilla);
+    color: var(--sobre-amarilla);
+    font-weight: 600;
+}
+.aviso-fijo__boton {
+    margin-left: auto;
+    padding: 0.3rem 0.8rem;
+    border: 2px solid currentColor;
+    border-radius: 6px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.avisos {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    z-index: 60;
+    display: grid;
+    gap: 0.5rem;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.aviso {
+    padding: 0.7rem 1.15rem;
+    border-radius: 8px;
+    background: var(--tinta);
+    color: var(--papel);
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+}
+
+.pie {
+    flex-shrink: 0;
+    margin-top: 2rem;
+    border-top: 1px solid var(--linea);
+    color: var(--tinta-2);
+    font-size: 0.9rem;
+}
+.pie__in {
+    display: grid;
+    gap: 0.35rem;
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem;
+}
+.pie a { width: fit-content; font-weight: 600; }
+
+
+/* ============================================================
+   12. PANTALLAS CHICAS
+   ============================================================ */
+
+@media (max-width: 900px) {
+    .portada { grid-template-columns: 1fr; gap: 2rem; }
+    .portada h1 { max-width: none; }
+    .portada::before { right: -12%; width: 70vw; top: auto; bottom: -3rem; transform: none; }
+    .portada::after { display: none; }
+}
+
+@media (max-width: 719px) {
+
+    .cabecera__in { gap: 1rem; }
+
+    /* El menú pasa abajo, al alcance del pulgar. */
+    .menu {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 45;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        height: calc(62px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        background: var(--cesped);
+        border-top: 1px solid rgb(255 255 255 / 0.14);
+    }
+
+    .menu__enlace {
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.15rem;
+        padding: 0;
+        font-size: 0.72rem;
+    }
+    .menu__enlace svg { display: block; }
+    .menu__enlace[aria-current="page"] { color: var(--amarilla); }
+    .menu__enlace[aria-current="page"]::after { left: 20%; right: 20%; top: 0; bottom: auto; height: 3px; }
+
+    main { padding-bottom: 4.75rem; }
+    .pie { margin-bottom: 4.5rem; }
+    .avisos { bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
+
+    .pagina { padding-top: 1.5rem; }
+
+    .marcador { padding: 0.25rem 1.1rem; }
+
+    /* Primero se ven Pos, Club y la barra verde con el total; las competiciones
+       quedan a la derecha para ver deslizando. */
+    .portada::before { display: none; }
+    .tabla-caja { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+    .tabla .c-pos { width: 2.75rem; min-width: 2.75rem; font-size: 1.2rem; }
+    .tabla .c-club { left: 2.75rem; min-width: 8.5rem; max-width: 8.5rem; padding-left: 0.5rem; padding-right: 0.5rem; }
+    .tabla .club-enlace { gap: 0.5rem; line-height: 1.15; }
+    .tabla .c-total { min-width: 7.25rem; text-align: left; padding-left: 0.9rem; padding-right: 1rem; }
+    .tabla thead .c-total { text-align: left; }
+    .tabla .c-comp { min-width: 4rem; }
+    .nota--deslizar { display: block; margin-top: 0.6rem; }
+
+    .posicion { grid-template-columns: 2.75rem minmax(0, 1fr) 4.75rem; }
+    .posicion__total { padding-right: 0.75rem; }
+    .posicion__total strong { font-size: 1.6rem; }
+
+    .cronologia__fila { grid-template-columns: 5.5rem minmax(0, 1fr); }
+    .cronologia__anio { font-size: 1.5rem; }
+
+    .dato { border-right: 0; border-bottom: 1px solid var(--linea); }
+    .dato:last-child { border-bottom: 0; }
+
+    .ficha__total { width: 100%; flex-direction: row; gap: 0.75rem; }
+    .ficha__total strong { font-size: 3.6rem; }
+
+    .titular { flex-wrap: nowrap; gap: 1rem; }
+    .titular h1 { font-size: 2.3rem; }
+    .titular .placa { --t: 72px !important; }
+
+    .estante__cabecera h2 { font-size: 1.45rem; }
+
+    .escudos { grid-template-columns: repeat(auto-fill, minmax(7.25rem, 1fr)); }
+}
+
+
+/* ============================================================
+   13. MOVIMIENTO REDUCIDO
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        animation-delay: 0ms !important;
+    }
+}

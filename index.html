@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>WINNER | Palmarés del fútbol argentino y sudamericano</title>
+    <meta name="description" content="Cuántos títulos ganó cada club del fútbol argentino y sudamericano: tablas, competiciones y palmarés año por año.">
+    <meta name="theme-color" content="#0C3B2C">
+    <link rel="icon" href="./IMG/assets/loggo-winner.png">
+
+    <!-- Tema guardado: se aplica antes de dibujar para evitar un destello. -->
+    <script>
+        (function () {
+            var tema = 'claro';
+            try {
+                tema = localStorage.getItem('winner:tema') ||
+                    (matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro');
+            } catch (e) { }
+            document.documentElement.dataset.tema = tema;
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./CSS/style.css">
+</head>
+<body>
+    <a class="saltar" id="saltar" href="#contenido">Saltar al contenido</a>
+
+    <header class="cabecera">
+        <div class="cabecera__in">
+            <a class="marca" href="#/" aria-label="WINNER, ir al inicio">
+                <img src="IMG/assets/loggo-winner.png" alt="" width="38" height="38">
+                <span class="marca__nombre">WINNER</span>
+            </a>
+
+            <nav class="menu" aria-label="Secciones">
+                <a class="menu__enlace" data-seccion="inicio" data-icono="inicio" href="#/"><span>Inicio</span></a>
+                <a class="menu__enlace" data-seccion="competiciones" data-icono="copa" href="#/competiciones"><span>Competiciones</span></a>
+                <a class="menu__enlace" data-seccion="equipos" data-icono="escudo" href="#/equipos/argentina"><span>Equipos</span></a>
+                <a class="menu__enlace" data-seccion="tabla" data-icono="tabla" href="#/tabla/argentina"><span>Tabla</span></a>
+            </nav>
+
+            <div class="acciones">
+                <button type="button" class="boton-icono" id="boton-actualizar" data-icono="actualizar"
+                    aria-label="Actualizar los datos" title="Actualizar los datos"></button>
+                <button type="button" class="boton-icono" id="boton-tema"></button>
+            </div>
+        </div>
+    </header>
+
+    <div id="aviso-fijo" class="aviso-fijo" role="alert" hidden></div>
+
+    <main id="contenido" tabindex="-1">
+        <noscript>
+            <section class="pagina pagina--angosta">
+                <h1>Se necesita JavaScript</h1>
+                <p class="bajada">Este sitio lee los datos desde Google Sheets y necesita JavaScript activado para mostrarlos.</p>
+            </section>
+        </noscript>
+    </main>
+
+    <footer class="pie">
+        <div class="pie__in">
+            <p>WINNER cuenta los títulos de los clubes del fútbol argentino y sudamericano. Los datos se cargan en Google Sheets.</p>
+            <p id="pie-lectura"></p>
+            <a href="./JS/datos.js">Revisar la carga de datos</a>
+        </div>
+    </footer>
+
+    <div id="avisos" class="avisos" role="status" aria-live="polite"></div>
+
+    <script src="./JS/config.js" defer></script>
+    <script src="./JS/utiles.js" defer></script>
+    <script src="./JS/csv.js" defer></script>
+    <script src="./JS/datos.js" defer></script>
+    <script src="./JS/componentes.js" defer></script>
+    <script src="./JS/vistas.js" defer></script>
+    <script src="./JS/app.js" defer></script>
+</body>
+</html>
